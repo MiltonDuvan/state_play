@@ -6,7 +6,7 @@ class CylinderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.black12,
+      color: Colors.white,
       height: MediaQuery.of(context).size.height * 0.18,
       width: MediaQuery.of(context).size.width * 0.22,
       child: Column(
