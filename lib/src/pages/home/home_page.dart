@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
+import 'package:state_play/src/pages/home/home_controller.dart';
 import 'package:state_play/src/widgets/cylinder.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+   HomePage({super.key});
+  final HomeController _controller = HomeController();
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +63,7 @@ class HomePage extends StatelessWidget {
         children: [
           IconButton(
               onPressed: () => Get.back(),
-              icon: Icon(
+              icon: const Icon(
                 Icons.close,
                 size: 30,
               )),
@@ -75,6 +77,7 @@ class HomePage extends StatelessWidget {
           spaceHeightForm(context),
           spaceHeightForm(context),
           TextField(
+            controller: _controller.nameController,
             decoration: InputDecoration(
               hintText: 'Nombre: Cilindro 1',
               constraints: BoxConstraints(
@@ -84,6 +87,7 @@ class HomePage extends StatelessWidget {
           ),
           spaceHeightForm(context),
           TextField(
+            controller: _controller.weightController,
             decoration: InputDecoration(
                 hintText: 'Peso en libras: 40',
                 constraints: BoxConstraints(
@@ -92,6 +96,7 @@ class HomePage extends StatelessWidget {
           ),
           spaceHeightForm(context),
           TextField(
+            controller: _controller.priceController,
             decoration: InputDecoration(
                 hintText: 'Precio: 72.000',
                 constraints: BoxConstraints(
@@ -104,7 +109,9 @@ class HomePage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    _controller.addCylinder();
+                  },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blueAccent,
                       shape: RoundedRectangleBorder(
