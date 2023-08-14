@@ -4,7 +4,7 @@ import 'package:state_play/src/pages/home/home_controller.dart';
 import 'package:state_play/src/widgets/cylinder.dart';
 
 class HomePage extends StatelessWidget {
-   HomePage({super.key});
+  HomePage({super.key});
   final HomeController _controller = HomeController();
 
   @override

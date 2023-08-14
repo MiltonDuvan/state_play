@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 import 'package:state_play/src/pages/home/home_controller.dart';
 
 class CylinderWidget extends StatelessWidget {
@@ -58,6 +59,18 @@ class CylinderWidget extends StatelessWidget {
                     topLeft: Radius.circular(20),
                     topRight: Radius.circular(20),
                   )),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                      onPressed: () => alertDeleteCilynder(context),
+                      icon: const Icon(
+                        Icons.close,
+                        color: Colors.black54,
+                      ))
+                ],
+              ),
             )
           ],
         ),
@@ -101,4 +114,53 @@ class CylinderWidget extends StatelessWidget {
       ],
     );
   }
+
+  Future alertDeleteCilynder(BuildContext context) => showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+          backgroundColor: Colors.transparent,
+          contentPadding: EdgeInsets.all(0),
+          content: Container(
+            width: MediaQuery.of(context).size.width - 20,
+            height: MediaQuery.of(context).size.height * 0.2,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+              color: Colors.white,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'Eliminar cilindro',
+                  style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.width * 0.05,
+                      fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.015,
+                ),
+                Text(
+                  '¿Estas seguro de eliminar este cilindro?',
+                  style: TextStyle(
+                    fontSize: MediaQuery.of(context).size.width * 0.04,
+                  ),
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.03,
+                ),
+                Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey[350]),
+                          onPressed: () => Get.back(),
+                          child: const Text('Cancelar')),
+                      ElevatedButton(onPressed: null, child: Text('Confirmar'))
+                    ])
+              ],
+            ),
+          )));
 }
