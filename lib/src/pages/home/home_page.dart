@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/route_manager.dart';
 import 'package:state_play/src/pages/home/home_controller.dart';
 import 'package:state_play/src/widgets/cylinder.dart';
@@ -11,6 +12,10 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+      appBar: AppBar(
+          title: Obx(
+        () => Text('${_controller.amount.value}'),
+      )),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -20,7 +25,11 @@ class HomePage extends StatelessWidget {
               children: [
                 IconButton(
                     onPressed: () => alertFormAddCylinder(context),
-                    icon: const Icon(Icons.add_box_outlined)),
+                    icon: Icon(
+                      Icons.add_box_outlined,
+                      size: MediaQuery.of(context).size.width * 0.1,
+                      color: Colors.green,
+                    )),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.04,
                 )

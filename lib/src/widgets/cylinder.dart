@@ -19,15 +19,19 @@ class CylinderWidget extends StatelessWidget {
           return const Text('No hay cilindros por el momento');
         } else {
           return Container(
-              color: Color.fromARGB(124, 1, 42, 66),
-              height: MediaQuery.of(context).size.height * 0.26,
-              width: MediaQuery.of(context).size.width * 0.24,
-              child: ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  final cylindes = snapshot.data![index];
-                  return listCylinders(context, cylindes);
-                },
+              color: const Color.fromARGB(186, 253, 253, 253),
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width -40,
+              child: Wrap(
+                spacing: 52.0,
+                runSpacing: 40.0,
+                children: List.generate(
+                  snapshot.data!.length,
+                  (index) {
+                    final cylindes = snapshot.data![index];
+                    return listCylinders(context, cylindes);
+                  },
+                ),
               ));
         }
       },
@@ -64,7 +68,7 @@ class CylinderWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   IconButton(
-                      onPressed: () => alertDeleteCilynder(context),
+                      onPressed: () => alertDeleteCilynder(context, cylinder['id']),
                       icon: const Icon(
                         Icons.close,
                         color: Colors.black54,
@@ -115,11 +119,11 @@ class CylinderWidget extends StatelessWidget {
     );
   }
 
-  Future alertDeleteCilynder(BuildContext context) => showDialog(
+  Future alertDeleteCilynder(BuildContext context, int id) => showDialog(
       context: context,
       builder: (context) => AlertDialog(
           backgroundColor: Colors.transparent,
-          contentPadding: EdgeInsets.all(0),
+          contentPadding: const EdgeInsets.all(0),
           content: Container(
             width: MediaQuery.of(context).size.width - 20,
             height: MediaQuery.of(context).size.height * 0.2,
@@ -158,7 +162,7 @@ class CylinderWidget extends StatelessWidget {
                               backgroundColor: Colors.grey[350]),
                           onPressed: () => Get.back(),
                           child: const Text('Cancelar')),
-                      ElevatedButton(onPressed: null, child: Text('Confirmar'))
+                      ElevatedButton(onPressed:() => _controller.deleteCilynder(id), child: const Text('Confirmar'))
                     ])
               ],
             ),

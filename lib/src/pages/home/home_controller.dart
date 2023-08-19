@@ -9,6 +9,9 @@ class HomeController extends GetxController {
   TextEditingController weightController = TextEditingController();
   TextEditingController priceController = TextEditingController();
 
+
+  RxInt amount= 0.obs;
+
   addCylinder() async {
     if (nameController.text.isEmpty ||
         weightController.text.isEmpty ||
@@ -44,6 +47,8 @@ class HomeController extends GetxController {
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
       print('Cylinder saved.');
+      amount ++;
+      print('cilindros $amount');
       await database.close();
       Get.offAllNamed('/home_page');
     } catch (e) {
@@ -64,5 +69,29 @@ class HomeController extends GetxController {
     await database.close();
     return cylinders;
   }
-  
+
+  Future<void> deleteCilynder(int id) async {
+    Database database = await openDatabase(
+      join(await getDatabasesPath(), 'my_database.db'),
+      version: 1,
+    );
+    try {
+      await database.delete('cylinders', where: 'id=?', whereArgs: [id]);
+      print('Cilinder deleted');
+      await database.close();
+      amount --;
+      print(' cilindros : $amount');
+      goToHome();
+    } catch (e) {
+      print('error al eliminar: $e');
+      Get.showSnackbar(const GetSnackBar(
+        message: 'Error al eliminar',
+        duration: Duration(seconds: 4),
+      ));
+    }
+  }
+
+  void goToHome() {
+    Get.offAllNamed('/home_page');
+  }
 }
