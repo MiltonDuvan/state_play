@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/route_manager.dart';
 import 'package:state_play/src/pages/home/home_controller.dart';
 
 class CylinderWidget extends StatelessWidget {
   CylinderWidget({super.key});
-  final HomeController _controller = HomeController();
+  final HomeController _controller = Get.find<HomeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -18,21 +19,28 @@ class CylinderWidget extends StatelessWidget {
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return const Text('No hay cilindros por el momento');
         } else {
-          return Container(
-              color: const Color.fromARGB(186, 253, 253, 253),
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width -40,
-              child: Wrap(
-                spacing: 52.0,
-                runSpacing: 40.0,
-                children: List.generate(
-                  snapshot.data!.length,
-                  (index) {
-                    final cylindes = snapshot.data![index];
-                    return listCylinders(context, cylindes);
-                  },
-                ),
-              ));
+          _controller.totalCylinders.value = snapshot.data!.length;
+          return Column(
+            children: [
+              if (_controller.totalCylinders != null)
+                Text('Total Cylinders: ${_controller.totalCylinders}'),
+              Container(
+                  color: const Color.fromARGB(186, 253, 253, 253),
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width - 40,
+                  child: Wrap(
+                    spacing: 52.0,
+                    runSpacing: 40.0,
+                    children: List.generate(
+                      _controller.totalCylinders.value,
+                      (index) {
+                        final cylindes = snapshot.data![index];
+                        return listCylinders(context, cylindes);
+                      },
+                    ),
+                  )),
+            ],
+          );
         }
       },
     );
@@ -68,7 +76,8 @@ class CylinderWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   IconButton(
-                      onPressed: () => alertDeleteCilynder(context, cylinder['id']),
+                      onPressed: () =>
+                          alertDeleteCilynder(context, cylinder['id']),
                       icon: const Icon(
                         Icons.close,
                         color: Colors.black54,
@@ -136,7 +145,7 @@ class CylinderWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  'Eliminar cilindro',
+                  'Eliminar   ',
                   style: TextStyle(
                       fontSize: MediaQuery.of(context).size.width * 0.05,
                       fontWeight: FontWeight.bold),
@@ -162,7 +171,9 @@ class CylinderWidget extends StatelessWidget {
                               backgroundColor: Colors.grey[350]),
                           onPressed: () => Get.back(),
                           child: const Text('Cancelar')),
-                      ElevatedButton(onPressed:() => _controller.deleteCilynder(id), child: const Text('Confirmar'))
+                      ElevatedButton(
+                          onPressed: () => _controller.deleteCilynder(id),
+                          child: const Text('Confirmar'))
                     ])
               ],
             ),

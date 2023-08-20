@@ -8,9 +8,16 @@ class HomeController extends GetxController {
   TextEditingController nameController = TextEditingController();
   TextEditingController weightController = TextEditingController();
   TextEditingController priceController = TextEditingController();
+  RxInt totalCylinders = 0.obs;
 
-
-  RxInt amount= 0.obs;
+  @override
+  void onInit() {
+    super.onInit();
+    getCylinders().then((cilynders) {
+      totalCylinders.value = cilynders.length;
+      update();
+    });
+  }
 
   addCylinder() async {
     if (nameController.text.isEmpty ||
@@ -47,8 +54,6 @@ class HomeController extends GetxController {
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
       print('Cylinder saved.');
-      amount ++;
-      print('cilindros $amount');
       await database.close();
       Get.offAllNamed('/home_page');
     } catch (e) {
@@ -79,8 +84,6 @@ class HomeController extends GetxController {
       await database.delete('cylinders', where: 'id=?', whereArgs: [id]);
       print('Cilinder deleted');
       await database.close();
-      amount --;
-      print(' cilindros : $amount');
       goToHome();
     } catch (e) {
       print('error al eliminar: $e');

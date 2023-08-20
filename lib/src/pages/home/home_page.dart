@@ -6,16 +6,15 @@ import 'package:state_play/src/widgets/cylinder.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
-  final HomeController _controller = HomeController();
+  final HomeController _controller = Get.put(HomeController());
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
-          title: Obx(
-        () => Text('${_controller.amount.value}'),
-      )),
+        title: Text('titleAppbar'),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -23,6 +22,12 @@ class HomePage extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
+                Obx(
+                  () => Text(
+                    'Agregar Cilindro ${_controller.totalCylinders.value}',
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                ),
                 IconButton(
                     onPressed: () => alertFormAddCylinder(context),
                     icon: Icon(
