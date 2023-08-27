@@ -9,6 +9,7 @@ class HomeController extends GetxController {
   TextEditingController weightController = TextEditingController();
   TextEditingController priceController = TextEditingController();
   RxInt totalCylinders = 0.obs;
+  var alertEditDelete= true.obs;
 
   @override
   void onInit() {
@@ -92,6 +93,10 @@ class HomeController extends GetxController {
         duration: Duration(seconds: 4),
       ));
     }
+  }
+
+  void toggleAlertEditDelete(){
+    alertEditDelete.value = !alertEditDelete.value;
   }
 
   void goToHome() {

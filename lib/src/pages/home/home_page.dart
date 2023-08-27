@@ -13,43 +13,76 @@ class HomePage extends StatelessWidget {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
-        title: Text('titleAppbar'),
+        title: const Text('Cilindros '),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.018,
+            ),
             Row(
               mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Obx(
-                  () => Text(
-                    'Agregar Cilindro ${_controller.totalCylinders.value}',
-                    style: const TextStyle(fontWeight: FontWeight.w600),
-                  ),
+                Text(
+                  'Aquí puedes agregar un nuevo cilindro',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: MediaQuery.of(context).size.width * 0.038),
                 ),
+                const Icon(Icons.arrow_right),
                 IconButton(
                     onPressed: () => alertFormAddCylinder(context),
                     icon: Icon(
                       Icons.add_box_outlined,
-                      size: MediaQuery.of(context).size.width * 0.1,
+                      size: MediaQuery.of(context).size.width * 0.08,
                       color: Colors.green,
                     )),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.04,
-                )
               ],
             ),
-            CylinderWidget()
+            spaceHeightForm(context),
+            CylinderWidget(),
           ],
         ),
       ),
+      bottomNavigationBar: _navigationBarHome(context),
     ));
   }
 
   Widget spaceHeightForm(BuildContext context) {
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.032,
+    );
+  }
+
+  Widget _navigationBarHome(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width - 4,
+      height: MediaQuery.of(context).size.height * 0.07,
+      color: const Color.fromARGB(210, 0, 0, 0),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Total: ',
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: MediaQuery.of(context).size.width * 0.06,
+                fontWeight: FontWeight.w300),
+          ),
+          Obx(
+            () => Text(
+              '${_controller.totalCylinders}',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: MediaQuery.of(context).size.width * 0.06,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
