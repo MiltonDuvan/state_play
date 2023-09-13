@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/route_manager.dart';
+import 'package:state_play/src/pages/edit_create_cylinder/edit_create_cylinder.dart';
 import 'package:state_play/src/pages/home/home_controller.dart';
 import 'package:state_play/src/widgets/cylinder.dart';
+import 'package:state_play/src/widgets/space_height_form.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
@@ -33,7 +35,16 @@ class HomePage extends StatelessWidget {
                 ),
                 const Icon(Icons.arrow_right),
                 IconButton(
-                    onPressed: () => alertFormAddCylinder(context),
+                    onPressed: () {
+                      _controller.formAddCylinder();
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return EditCreateCylinder(
+                              editCreate: () { _controller.addCylinder();},
+                              );
+                          });
+                    },
                     icon: Icon(
                       Icons.add_box_outlined,
                       size: MediaQuery.of(context).size.width * 0.08,
@@ -41,19 +52,13 @@ class HomePage extends StatelessWidget {
                     )),
               ],
             ),
-            spaceHeightForm(context),
+            const SpaceHeightForm(),
             CylinderWidget(),
           ],
         ),
       ),
       bottomNavigationBar: _navigationBarHome(context),
     ));
-  }
-
-  Widget spaceHeightForm(BuildContext context) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.032,
-    );
   }
 
   Widget _navigationBarHome(BuildContext context) {
@@ -81,94 +86,6 @@ class HomePage extends StatelessWidget {
                   fontWeight: FontWeight.bold),
             ),
           ),
-        ],
-      ),
-    );
-  }
-
-  Future alertFormAddCylinder(BuildContext context) => showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-            backgroundColor: Colors.transparent,
-            contentPadding: const EdgeInsets.all(0),
-            content: SingleChildScrollView(
-              child: _formInserData(context),
-            ),
-          ));
-
-  Widget _formInserData(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width - 60,
-      height: MediaQuery.of(context).size.height * 0.6,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30),
-        color: Colors.white,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          IconButton(
-              onPressed: () => Get.back(),
-              icon: const Icon(
-                Icons.close,
-                size: 30,
-              )),
-          Text(
-            'Agrega un cilindro',
-            style: TextStyle(
-              fontSize: MediaQuery.of(context).size.height * 0.025,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          spaceHeightForm(context),
-          spaceHeightForm(context),
-          TextField(
-            controller: _controller.nameController,
-            decoration: InputDecoration(
-              hintText: 'Nombre: Cilindro 1',
-              constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * 0.05,
-                  maxWidth: MediaQuery.of(context).size.width * 0.75),
-            ),
-          ),
-          spaceHeightForm(context),
-          TextField(
-            controller: _controller.weightController,
-            decoration: InputDecoration(
-                hintText: 'Peso en libras: 40',
-                constraints: BoxConstraints(
-                    maxHeight: MediaQuery.of(context).size.height * 0.05,
-                    maxWidth: MediaQuery.of(context).size.width * 0.75)),
-          ),
-          spaceHeightForm(context),
-          TextField(
-            controller: _controller.priceController,
-            decoration: InputDecoration(
-                hintText: 'Precio: 72.000',
-                constraints: BoxConstraints(
-                    maxHeight: MediaQuery.of(context).size.height * 0.05,
-                    maxWidth: MediaQuery.of(context).size.width * 0.75)),
-          ),
-          spaceHeightForm(context),
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                  onPressed: () {
-                    _controller.addCylinder();
-                  },
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blueAccent,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0))),
-                  child: const Text(
-                    'Agregar Cilindro',
-                    style: TextStyle(fontWeight: FontWeight.w600),
-                  )),
-            ],
-          )
         ],
       ),
     );

@@ -3,13 +3,14 @@ import 'package:get/get.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'package:path/path.dart';
+import 'package:state_play/src/pages/edit_create_cylinder/edit_create_cylinder.dart';
 
 class HomeController extends GetxController {
   TextEditingController nameController = TextEditingController();
   TextEditingController weightController = TextEditingController();
   TextEditingController priceController = TextEditingController();
   RxInt totalCylinders = 0.obs;
-  var alertEditDelete= true.obs;
+  RxBool editCreate = false.obs;
 
   @override
   void onInit() {
@@ -76,6 +77,36 @@ class HomeController extends GetxController {
     return cylinders;
   }
 
+  Future<void> editCylinder(int id) async {
+    try {
+      Database database = await openDatabase(
+          join(await getDatabasesPath(), 'my_database.db'),
+          version: 1);
+      await database.update(
+          'cylinders',
+          {
+            'name': nameController.text,
+            'weight': weightController.text,
+            'price': double.parse(priceController.text)
+          },
+          where: 'id = ?',
+          whereArgs: [id],
+          conflictAlgorithm: ConflictAlgorithm.replace);
+      Get.showSnackbar(const GetSnackBar(
+        message: 'Cilindro actualizado',
+        duration: Duration(seconds: 4),
+      ));
+      await database.close();
+      goToHome();
+    } catch (e) {
+      print('Error editar cilynder: $e');
+      Get.showSnackbar(const GetSnackBar(
+        message: 'Ocurrio un error al editar el cilindro',
+        duration: Duration(seconds: 4),
+      ));
+    }
+  }
+
   Future<void> deleteCilynder(int id) async {
     Database database = await openDatabase(
       join(await getDatabasesPath(), 'my_database.db'),
@@ -95,8 +126,18 @@ class HomeController extends GetxController {
     }
   }
 
-  void toggleAlertEditDelete(){
-    alertEditDelete.value = !alertEditDelete.value;
+  formEditCylinder() {
+    if (editCreate.isTrue) {
+      editCreate.value = false;
+    }
+    print(editCreate);
+  }
+
+  formAddCylinder() {
+    if (editCreate.isFalse) {
+      editCreate.value = true;
+    }
+    print(editCreate);
   }
 
   void goToHome() {

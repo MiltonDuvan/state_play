@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/route_manager.dart';
 import 'package:intl/intl.dart';
+import 'package:state_play/src/pages/edit_create_cylinder/edit_create_cylinder.dart';
 import 'package:state_play/src/pages/home/home_controller.dart';
 
 class CylinderWidget extends StatelessWidget {
@@ -81,8 +82,12 @@ class CylinderWidget extends StatelessWidget {
                     ),
                     child: IconButton(
                       iconSize: MediaQuery.of(context).size.width * 0.038,
-                      onPressed: () =>
-                          alertDeleteCylinder(context, cylinder['id'], 'Eliminar', '¿Estas seguro de eliminar este cilindro?',()=> _controller.deleteCilynder(cylinder['id'])),
+                      onPressed: () => alertDeleteCylinder(
+                          context,
+                          cylinder['id'],
+                          'Eliminar',
+                          '¿Estas seguro de eliminar este cilindro?',
+                          () => _controller.deleteCilynder(cylinder['id'])),
                       icon: const Icon(
                         Icons.delete_forever,
                         color: Colors.white,
@@ -98,7 +103,21 @@ class CylinderWidget extends StatelessWidget {
           ],
         ),
         GestureDetector(
-          onTap: () => alertDeleteCylinder(context, cylinder['id'], 'Editar', '¿Quieres editar este cilindro?',(){}),
+          onTap: () => alertDeleteCylinder(context, cylinder['id'], 'Editar',
+              '¿Quieres editar este cilindro?', () {
+            _controller.formEditCylinder();
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return EditCreateCylinder(
+                    editCreate: () {_controller.editCylinder(cylinder['id']);},
+                    cylinderId: cylinder['id'],
+                    cylinderName: cylinder['name'],
+                    cylinderWeight: cylinder['weight'],
+                    cylinderPrice: cylinder['price']
+                  );
+                });
+          }),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -141,12 +160,8 @@ class CylinderWidget extends StatelessWidget {
     );
   }
 
-  Future<void> alertDeleteCylinder(
-    BuildContext context, 
-    int id, 
-    String title, 
-    String descrption, 
-    VoidCallback onConfirmPressed) =>
+  Future<void> alertDeleteCylinder(BuildContext context, int id, String title,
+          String descrption, VoidCallback onConfirmPressed) =>
       showDialog(
           context: context,
           builder: (context) => AlertDialog(
