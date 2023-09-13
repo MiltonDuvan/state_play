@@ -82,21 +82,32 @@ class HomeController extends GetxController {
       Database database = await openDatabase(
           join(await getDatabasesPath(), 'my_database.db'),
           version: 1);
-      await database.update(
-          'cylinders',
-          {
-            'name': nameController.text,
-            'weight': weightController.text,
-            'price': double.parse(priceController.text)
-          },
-          where: 'id = ?',
-          whereArgs: [id],
-          conflictAlgorithm: ConflictAlgorithm.replace);
+
+      final Map<String, dynamic> updatedValues = {};
+      
+      if (nameController.text.isNotEmpty) {
+        updatedValues['name'] = nameController.text;
+      }
+      if (weightController.text.isNotEmpty) {
+        updatedValues['weight'] = weightController.text;
+      }
+      if (priceController.text.isNotEmpty) {
+        updatedValues['price'] = double.parse(priceController.text);
+      }
+
+      if (updatedValues.isNotEmpty) {
+        await database.update('cylinders', updatedValues,
+            where: 'id = ?',
+            whereArgs: [id],
+            conflictAlgorithm: ConflictAlgorithm.replace);
+      }
+      await database.close();
+
       Get.showSnackbar(const GetSnackBar(
         message: 'Cilindro actualizado',
         duration: Duration(seconds: 4),
       ));
-      await database.close();
+
       goToHome();
     } catch (e) {
       print('Error editar cilynder: $e');
