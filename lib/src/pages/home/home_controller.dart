@@ -3,14 +3,16 @@ import 'package:get/get.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'package:path/path.dart';
-import 'package:state_play/src/pages/edit_create_cylinder/edit_create_cylinder.dart';
+import 'package:state_play/src/pages/edit_create_cylinder/edit_cylinder.dart';
 
 class HomeController extends GetxController {
   TextEditingController nameController = TextEditingController();
   TextEditingController weightController = TextEditingController();
   TextEditingController priceController = TextEditingController();
   RxInt totalCylinders = 0.obs;
-  RxBool editCreate = false.obs;
+  //DropdownMenuItem
+  RxList<int> weightList = <int>[30, 40, 100].obs;
+  RxInt valueDropdown = 40.obs;
 
   @override
   void onInit() {
@@ -22,9 +24,7 @@ class HomeController extends GetxController {
   }
 
   addCylinder() async {
-    if (nameController.text.isEmpty ||
-        weightController.text.isEmpty ||
-        priceController.text.isEmpty) {
+    if (nameController.text.isEmpty || priceController.text.isEmpty) {
       Get.showSnackbar(const GetSnackBar(
         message: 'Todos los campos son obligatorios',
         duration: Duration(seconds: 4),
@@ -50,7 +50,7 @@ class HomeController extends GetxController {
         'cylinders',
         {
           'name': nameController.text,
-          'weight': int.parse(weightController.text),
+          'weight': valueDropdown.value,
           'price': double.parse(priceController.text)
         },
         conflictAlgorithm: ConflictAlgorithm.replace,
@@ -84,7 +84,7 @@ class HomeController extends GetxController {
           version: 1);
 
       final Map<String, dynamic> updatedValues = {};
-      
+
       if (nameController.text.isNotEmpty) {
         updatedValues['name'] = nameController.text;
       }
@@ -137,21 +137,11 @@ class HomeController extends GetxController {
     }
   }
 
-  formEditCylinder() {
-    if (editCreate.isTrue) {
-      editCreate.value = false;
-    }
-    print(editCreate);
-  }
-
-  formAddCylinder() {
-    if (editCreate.isFalse) {
-      editCreate.value = true;
-    }
-    print(editCreate);
-  }
-
   void goToHome() {
     Get.offAllNamed('/home_page');
+  }
+
+  void goToAddCylinder() {
+    Get.toNamed('/add_cylinder');
   }
 }

@@ -3,13 +3,13 @@ import 'package:get/get.dart';
 import 'package:state_play/src/pages/home/home_controller.dart';
 import 'package:state_play/src/widgets/space_height_form.dart';
 
-class EditCreateCylinder extends StatelessWidget {
+class EditCylinder extends StatelessWidget {
   final VoidCallback editCreate;
   final int? cylinderId;
   final String? cylinderName;
   final int? cylinderWeight;
   final double? cylinderPrice;
-  EditCreateCylinder(
+  EditCylinder(
       {Key? key,
       required this.editCreate,
       this.cylinderId,
@@ -50,9 +50,7 @@ class EditCreateCylinder extends StatelessWidget {
                 size: 30,
               )),
           Text(
-            _controller.editCreate.value
-                ? 'Agrega un cilindro'
-                : 'Editar cilindro',
+            'Editar cilindro',
             style: TextStyle(
               fontSize: MediaQuery.of(context).size.height * 0.025,
               fontWeight: FontWeight.bold,
@@ -63,9 +61,7 @@ class EditCreateCylinder extends StatelessWidget {
           TextField(
             controller: _controller.nameController,
             decoration: InputDecoration(
-              hintText: _controller.editCreate.value
-                  ? 'Nombre: Cilindro 1'
-                  : cylinderName,
+              hintText: cylinderName,
               constraints: BoxConstraints(
                   maxHeight: MediaQuery.of(context).size.height * 0.05,
                   maxWidth: MediaQuery.of(context).size.width * 0.75),
@@ -75,8 +71,7 @@ class EditCreateCylinder extends StatelessWidget {
           TextField(
             controller: _controller.weightController,
             decoration: InputDecoration(
-                hintText: _controller.editCreate.value ?
-                'Peso en libras: 40' :  '$cylinderWeight Libras',
+                hintText: '$cylinderWeight Libras',
                 constraints: BoxConstraints(
                     maxHeight: MediaQuery.of(context).size.height * 0.05,
                     maxWidth: MediaQuery.of(context).size.width * 0.75)),
@@ -85,8 +80,7 @@ class EditCreateCylinder extends StatelessWidget {
           TextField(
             controller: _controller.priceController,
             decoration: InputDecoration(
-                hintText: _controller.editCreate.value ?
-                'Precio: 72.000' :  '\$ ${cylinderPrice} pesos',
+                hintText: '\$ $cylinderPrice pesos',
                 constraints: BoxConstraints(
                     maxHeight: MediaQuery.of(context).size.height * 0.05,
                     maxWidth: MediaQuery.of(context).size.width * 0.75)),
@@ -102,10 +96,9 @@ class EditCreateCylinder extends StatelessWidget {
                       backgroundColor: Colors.blueAccent,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20.0))),
-                  child:Text(
-                    _controller.editCreate.value ?
-                    'Agregar Cilindro' : 'Actualizar cilindro',
-                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  child: const Text(
+                    'Actualizar cilindro',
+                    style: TextStyle(fontWeight: FontWeight.w600),
                   )),
             ],
           )

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/route_manager.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:state_play/src/pages/edit_create_cylinder/create_cylinder.dart';
 import 'package:state_play/src/pages/home/home_page.dart';
 
 void main() async {
@@ -26,7 +27,8 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       initialRoute: '/home_page',
-      getPages: [GetPage(name: '/home_page', page: () => HomePage())],
+      getPages: [GetPage(name: '/home_page', page: () => HomePage()),
+      GetPage(name: '/add_cylinder', page: () => CreateCylinder())],
       theme: ThemeData(
         fontFamily: 'Averta',
         scaffoldBackgroundColor: Colors.white,

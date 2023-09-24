@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/route_manager.dart';
 import 'package:intl/intl.dart';
-import 'package:state_play/src/pages/edit_create_cylinder/edit_create_cylinder.dart';
+import 'package:state_play/src/pages/edit_create_cylinder/edit_cylinder.dart';
 import 'package:state_play/src/pages/home/home_controller.dart';
 
 class CylinderWidget extends StatelessWidget {
@@ -33,7 +33,7 @@ class CylinderWidget extends StatelessWidget {
                   _controller.totalCylinders.value,
                   (index) {
                     final cylindes = snapshot.data![index];
-                    return listCylinders(context, cylindes);
+                    return listCylinders(context, cylindes, index);
                   },
                 ),
               ));
@@ -42,17 +42,25 @@ class CylinderWidget extends StatelessWidget {
     );
   }
 
-  Widget listCylinders(BuildContext context, Map<String, dynamic> cylinder) {
+  Widget listCylinders(BuildContext context, Map<String, dynamic> cylinder, int index) {
     NumberFormat numberFormat = NumberFormat('#,###');
     String priceFormat = numberFormat.format(cylinder['price']);
+    int cilynderNumber = index + 1;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SizedBox(
+        const IconButton(
+            onPressed: null,
+            icon: Icon(
+              Icons.check_circle,
+              color: Color(0XFF00C535),
+            )),
+        Container(
+            color: Colors.amberAccent,
             width: MediaQuery.of(context).size.width * 0.22,
             child: Text(
-              cylinder['name'],
+              'Cilindro $cilynderNumber',
               textAlign: TextAlign.center,
             )),
         Row(
@@ -105,17 +113,18 @@ class CylinderWidget extends StatelessWidget {
         GestureDetector(
           onTap: () => alertDeleteCylinder(context, cylinder['id'], 'Editar',
               '¿Quieres editar este cilindro?', () {
-            _controller.formEditCylinder();
+        
             showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return EditCreateCylinder(
-                    editCreate: () {_controller.editCylinder(cylinder['id']);},
-                    cylinderId: cylinder['id'],
-                    cylinderName: cylinder['name'],
-                    cylinderWeight: cylinder['weight'],
-                    cylinderPrice: cylinder['price']
-                  );
+                  return EditCylinder(
+                      editCreate: () {
+                        _controller.editCylinder(cylinder['id']);
+                      },
+                      cylinderId: cylinder['id'],
+                      cylinderName: cylinder['name'],
+                      cylinderWeight: cylinder['weight'],
+                      cylinderPrice: cylinder['price']);
                 });
           }),
           child: Row(
