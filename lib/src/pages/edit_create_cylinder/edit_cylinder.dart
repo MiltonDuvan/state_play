@@ -6,14 +6,12 @@ import 'package:state_play/src/widgets/space_height_form.dart';
 class EditCylinder extends StatelessWidget {
   final VoidCallback editCreate;
   final int? cylinderId;
-  final String? cylinderName;
   final int? cylinderWeight;
   final double? cylinderPrice;
   EditCylinder(
       {Key? key,
       required this.editCreate,
       this.cylinderId,
-      this.cylinderName,
       this.cylinderWeight,
       this.cylinderPrice})
       : super(key: key);
@@ -22,6 +20,7 @@ class EditCylinder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    _controller.editWeight.value = cylinderWeight ?? 0;
     return AlertDialog(
       backgroundColor: Colors.transparent,
       contentPadding: const EdgeInsets.all(0),
@@ -33,11 +32,11 @@ class EditCylinder extends StatelessWidget {
 
   Widget _formInserData(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width - 60,
-      height: MediaQuery.of(context).size.height * 0.6,
+      height: MediaQuery.of(context).size.height * 0.8,
+      width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
-        color: Colors.white,
+        color: Colors.white
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -58,23 +57,19 @@ class EditCylinder extends StatelessWidget {
           ),
           const SpaceHeightForm(),
           const SpaceHeightForm(),
-          TextField(
-            controller: _controller.nameController,
-            decoration: InputDecoration(
-              hintText: cylinderName,
-              constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * 0.05,
-                  maxWidth: MediaQuery.of(context).size.width * 0.75),
+          Obx(
+            () => SingleChildScrollView(
+              scrollDirection: Axis
+                  .horizontal, // Esto permite que la lista sea horizontalmente scrollable
+              child: Row(
+                children: [
+                  _optionGender('10 Libras', 10),
+                  _optionGender('30 Libras', 30),
+                  _optionGender('40 Libras', 40),
+                  _optionGender('100 Libras', 100),
+                ],
+              ),
             ),
-          ),
-          const SpaceHeightForm(),
-          TextField(
-            controller: _controller.weightController,
-            decoration: InputDecoration(
-                hintText: '$cylinderWeight Libras',
-                constraints: BoxConstraints(
-                    maxHeight: MediaQuery.of(context).size.height * 0.05,
-                    maxWidth: MediaQuery.of(context).size.width * 0.75)),
           ),
           const SpaceHeightForm(),
           TextField(
@@ -101,9 +96,32 @@ class EditCylinder extends StatelessWidget {
                     style: TextStyle(fontWeight: FontWeight.w600),
                   )),
             ],
-          )
+          ),
         ],
       ),
     );
+  }
+
+  ChoiceChip _optionGender(String label, int value) {
+    bool isActive = _controller.editWeight.value == value;
+    return ChoiceChip(
+        shape: isActive
+            ? const StadiumBorder(side: BorderSide(color: Colors.blueAccent))
+            : const StadiumBorder(),
+        label: Text(label,
+            style: TextStyle(
+                color: Color(0xFF000000),
+                fontWeight: isActive ? FontWeight.w600 : FontWeight.w300)),
+        avatarBorder: CircleBorder(side: BorderSide(color: Colors.white)),
+        selectedColor: Color(0xFFFFFFFF),
+        selected: isActive,
+        backgroundColor:
+            isActive ? Color.fromARGB(255, 4, 2, 2) : Color(0xFFEEEEEE),
+        onSelected: (bool selected) {
+          if (selected) {
+            _controller.updateWeight(value);
+            print(_controller.editWeight.value);
+          }
+        });
   }
 }

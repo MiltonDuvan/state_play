@@ -122,7 +122,6 @@ class CylinderWidget extends StatelessWidget {
                         _controller.editCylinder(cylinder['id']);
                       },
                       cylinderId: cylinder['id'],
-                      cylinderName: cylinder['name'],
                       cylinderWeight: cylinder['weight'],
                       cylinderPrice: cylinder['price']);
                 });

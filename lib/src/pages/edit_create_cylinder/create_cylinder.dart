@@ -47,25 +47,23 @@ class CreateCylinder extends StatelessWidget {
           ),
           const SpaceHeightForm(),
           const SpaceHeightForm(),
-          TextField(
-            controller: _controller.nameController,
-            decoration: InputDecoration(
-              hintText: 'Nombre: Cilindro 1',
-              constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * 0.05,
-                  maxWidth: MediaQuery.of(context).size.width * 0.75),
-            ),
-          ),
-          const SpaceHeightForm(),
-          Row(mainAxisAlignment: MainAxisAlignment.start ,
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.05,
-            ),
-               Text('Cantidad libras: ', style: TextStyle(fontFamily: ('Averta'), fontSize: MediaQuery.of(context).size.width * 0.04, fontWeight: FontWeight.w300),),
-               SizedBox(
-              width: MediaQuery.of(context).size.width * 0.25,
-            ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.05,
+              ),
+              Text(
+                'Cantidad libras: ',
+                style: TextStyle(
+                    fontFamily: ('Averta'),
+                    fontSize: MediaQuery.of(context).size.width * 0.04,
+                    fontWeight: FontWeight.w300),
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.25,
+              ),
               _selectWeightWidget(),
             ],
           ),

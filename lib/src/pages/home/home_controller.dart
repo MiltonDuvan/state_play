@@ -6,13 +6,17 @@ import 'package:path/path.dart';
 import 'package:state_play/src/pages/edit_create_cylinder/edit_cylinder.dart';
 
 class HomeController extends GetxController {
-  TextEditingController nameController = TextEditingController();
   TextEditingController weightController = TextEditingController();
   TextEditingController priceController = TextEditingController();
   RxInt totalCylinders = 0.obs;
   //DropdownMenuItem
-  RxList<int> weightList = <int>[30, 40, 100].obs;
+  RxList<int> weightList = <int>[10, 30, 40, 100].obs;
   RxInt valueDropdown = 40.obs;
+
+  var editWeight = 0.obs;
+  void updateWeight(int value) {
+    editWeight.value = value;
+  }
 
   @override
   void onInit() {
@@ -24,9 +28,9 @@ class HomeController extends GetxController {
   }
 
   addCylinder() async {
-    if (nameController.text.isEmpty || priceController.text.isEmpty) {
+    if (priceController.text.isEmpty) {
       Get.showSnackbar(const GetSnackBar(
-        message: 'Todos los campos son obligatorios',
+        message: 'Completa el precio',
         duration: Duration(seconds: 4),
       ));
       return;
@@ -39,7 +43,7 @@ class HomeController extends GetxController {
       join(await getDatabasesPath(), 'my_database.db'),
       onCreate: (db, version) {
         return db.execute(
-          'CREATE TABLE cylinders(id INTEGER PRIMARY KEY, name TEXT, weight INTEGER, price DOUBLE)',
+          'CREATE TABLE cylinders(id INTEGER PRIMARY KEY, weight INTEGER, price DOUBLE)',
         );
       },
       version: 1,
@@ -49,7 +53,6 @@ class HomeController extends GetxController {
       await database.insert(
         'cylinders',
         {
-          'name': nameController.text,
           'weight': valueDropdown.value,
           'price': double.parse(priceController.text)
         },
@@ -85,12 +88,8 @@ class HomeController extends GetxController {
 
       final Map<String, dynamic> updatedValues = {};
 
-      if (nameController.text.isNotEmpty) {
-        updatedValues['name'] = nameController.text;
-      }
-      if (weightController.text.isNotEmpty) {
-        updatedValues['weight'] = weightController.text;
-      }
+      updatedValues['weight'] = editWeight.value;
+
       if (priceController.text.isNotEmpty) {
         updatedValues['price'] = double.parse(priceController.text);
       }
