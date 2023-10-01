@@ -4,45 +4,42 @@ import 'package:get/route_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:state_play/src/pages/edit_create_cylinder/edit_cylinder.dart';
 import 'package:state_play/src/pages/home/home_controller.dart';
+import 'package:state_play/src/pages/sold/sold_controller.dart';
 
 class CylinderWidget extends StatelessWidget {
   CylinderWidget({super.key});
   final HomeController _controller = Get.find<HomeController>();
+  final SoldController _soldController = Get.put(SoldController());
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Map<String, dynamic>>>(
-      future: _controller.getCylinders(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
-        } else if (snapshot.hasError) {
-          return const Text('Error al cargar datos');
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Text('No hay cilindros por el momento');
-        } else {
-          _controller.totalCylinders.value = snapshot.data!.length;
-          return Container(
-              color: Colors.white70,
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width - 40,
-              child: Wrap(
-                spacing: 52.0,
-                runSpacing: 40.0,
-                children: List.generate(
-                  _controller.totalCylinders.value,
-                  (index) {
-                    final cylindes = snapshot.data![index];
-                    return listCylinders(context, cylindes, index);
-                  },
-                ),
-              ));
-        }
-      },
-    );
+    return Obx(() {
+      if (_controller.loading.value) {
+        return const CircularProgressIndicator();
+      } else if (_controller.cylinders.isEmpty) {
+        return const Text('No hay cilindros  por el momento');
+      } else {
+        return Container(
+            color: Colors.white70,
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width - 40,
+            child: Wrap(
+              spacing: 52.0,
+              runSpacing: 40.0,
+              children: List.generate(
+                _controller.totalCylinders.value,
+                (index) {
+                  final cylindes = _controller.cylinders[index];
+                  return listCylinders(context, cylindes, index);
+                },
+              ),
+            ));
+      }
+    });
   }
 
-  Widget listCylinders(BuildContext context, Map<String, dynamic> cylinder, int index) {
+  Widget listCylinders(
+      BuildContext context, Map<String, dynamic> cylinder, int index) {
     NumberFormat numberFormat = NumberFormat('#,###');
     String priceFormat = numberFormat.format(cylinder['price']);
     int cilynderNumber = index + 1;
@@ -50,9 +47,10 @@ class CylinderWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const IconButton(
-            onPressed: null,
-            icon: Icon(
+        IconButton(
+            onPressed: () async =>
+                Get.dialog(await formSold(context, cylinder['weight'])),
+            icon: const Icon(
               Icons.check_circle,
               color: Color(0XFF00C535),
             )),
@@ -95,7 +93,9 @@ class CylinderWidget extends StatelessWidget {
                           cylinder['id'],
                           'Eliminar',
                           '¿Estas seguro de eliminar este cilindro?',
-                          () => _controller.deleteCilynder(cylinder['id'])),
+                          () { _controller.deleteCilynder(cylinder['id']);
+                          Get.back();
+                          }),
                       icon: const Icon(
                         Icons.delete_forever,
                         color: Colors.white,
@@ -113,13 +113,13 @@ class CylinderWidget extends StatelessWidget {
         GestureDetector(
           onTap: () => alertDeleteCylinder(context, cylinder['id'], 'Editar',
               '¿Quieres editar este cilindro?', () {
-        
             showDialog(
                 context: context,
                 builder: (BuildContext context) {
                   return EditCylinder(
                       editCreate: () {
                         _controller.editCylinder(cylinder['id']);
+                        _controller.goToHome();
                       },
                       cylinderId: cylinder['id'],
                       cylinderWeight: cylinder['weight'],
@@ -220,4 +220,37 @@ class CylinderWidget extends StatelessWidget {
                   ],
                 ),
               )));
+
+  Future<AlertDialog> formSold(BuildContext context, cylinderWeight) async {
+    return AlertDialog(
+      title: const Text('Completa el formulario de venta'),
+      content: Column(
+        children: [
+          TextField(
+            controller: _soldController.nameController,
+            decoration: InputDecoration(
+                hintText: 'Nombre del cilindro',
+                constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height * 0.05,
+                    maxWidth: MediaQuery.of(context).size.width * 0.75)),
+          ),
+          TextField(
+            controller: _soldController.priceController,
+            decoration: InputDecoration(
+                hintText: 'Precio: \$ 80.0000',
+                constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height * 0.05,
+                    maxWidth: MediaQuery.of(context).size.width * 0.75)),
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+            onPressed: () {
+              _soldController.soldCylinder(cylinderWeight);
+            },
+            child: const Text('Confirmar Venta'))
+      ],
+    );
+  }
 }

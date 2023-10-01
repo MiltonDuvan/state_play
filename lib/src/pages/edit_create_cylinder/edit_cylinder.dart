@@ -110,13 +110,13 @@ class EditCylinder extends StatelessWidget {
             : const StadiumBorder(),
         label: Text(label,
             style: TextStyle(
-                color: Color(0xFF000000),
+                color: const Color(0xFF000000),
                 fontWeight: isActive ? FontWeight.w600 : FontWeight.w300)),
-        avatarBorder: CircleBorder(side: BorderSide(color: Colors.white)),
-        selectedColor: Color(0xFFFFFFFF),
+        avatarBorder: const CircleBorder(side: BorderSide(color: Colors.white)),
+        selectedColor: const Color(0xFFFFFFFF),
         selected: isActive,
         backgroundColor:
-            isActive ? Color.fromARGB(255, 4, 2, 2) : Color(0xFFEEEEEE),
+            isActive ? const Color.fromARGB(255, 4, 2, 2) : const Color(0xFFEEEEEE),
         onSelected: (bool selected) {
           if (selected) {
             _controller.updateWeight(value);

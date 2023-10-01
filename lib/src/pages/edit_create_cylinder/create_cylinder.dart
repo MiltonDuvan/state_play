@@ -47,7 +47,30 @@ class CreateCylinder extends StatelessWidget {
           ),
           const SpaceHeightForm(),
           const SpaceHeightForm(),
-
+          Row(
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.05,
+              ),
+              const Text('Cantidad de cilindros: '),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.08,
+              ),
+              TextField(
+                controller: _controller
+                    .quantityController,
+                    keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  hintText: '10',
+                  constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height * 0.05,
+                    maxWidth: MediaQuery.of(context).size.width * 0.2,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SpaceHeightForm(),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -70,6 +93,7 @@ class CreateCylinder extends StatelessWidget {
           const SpaceHeightForm(),
           TextField(
             controller: _controller.priceController,
+            keyboardType: TextInputType.number,
             decoration: InputDecoration(
                 hintText: 'Precio: 72.000',
                 constraints: BoxConstraints(
@@ -82,7 +106,9 @@ class CreateCylinder extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
-                  onPressed: () => _controller.addCylinder(),
+                  onPressed: () { _controller.addCylinder();
+                  Get.back();
+                  },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blueAccent,
                       shape: RoundedRectangleBorder(

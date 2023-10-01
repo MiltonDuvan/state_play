@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:sqflite/sqlite_api.dart';
 import 'package:path/path.dart';
-import 'package:state_play/src/pages/edit_create_cylinder/edit_cylinder.dart';
+
+import '../../global/global_var.dart';
 
 class HomeController extends GetxController {
-  TextEditingController weightController = TextEditingController();
   TextEditingController priceController = TextEditingController();
+  TextEditingController quantityController = TextEditingController();
+  //listar cilindros
+  RxBool loading = true.obs;
+  RxList<Map<String, dynamic>> cylinders = <Map<String, dynamic>>[].obs;
   RxInt totalCylinders = 0.obs;
+
+  int? quantity;
   //DropdownMenuItem
   RxList<int> weightList = <int>[10, 30, 40, 100].obs;
   RxInt valueDropdown = 40.obs;
@@ -19,23 +24,87 @@ class HomeController extends GetxController {
   }
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
-    getCylinders().then((cilynders) {
-      totalCylinders.value = cilynders.length;
-      update();
-    });
+    initializeDatabase();
+    _loadCylinders();
+  }
+
+  void _loadCylinders() async {
+    final loadedCylinders = await getCylinders();
+    cylinders.assignAll(loadedCylinders);
+    loading.value = false;
+    totalCylinders.value = loadedCylinders.length;
+    update();
+  }
+
+  late Database _database;
+  Future<void> initializeDatabase() async {
+    _database = await openDatabase(
+      join(await getDatabasesPath(), 'my_database.db'),
+      onCreate: (db, version) {
+        db.execute(
+          'CREATE TABLE cylinders(id INTEGER PRIMARY KEY, weight INTEGER, price DOUBLE)',
+        );
+        db.execute(
+          'CREATE TABLE solds(id INTEGER PRIMARY KEY, weight INTEGER, name TEXT)',
+        );
+      },
+      version: 1,
+    );
   }
 
   addCylinder() async {
-    if (priceController.text.isEmpty) {
+    if (quantityController.text.isEmpty || priceController.text.isEmpty) {
       Get.showSnackbar(const GetSnackBar(
-        message: 'Completa el precio',
+        message: 'Cantidad y precio son obligatorios',
         duration: Duration(seconds: 4),
       ));
       return;
     }
-    saveData();
+    quantity = int.parse(quantityController.text);
+
+    // Guardar los cilindros
+    for (int i = 0; i < quantity!; i++) {
+      await saveData(_database);
+    }
+  }
+
+  Future<void> saveData(Database database) async {
+    Database database = await openDatabase('my_database.db');
+    try {
+      await database.insert(
+        'cylinders',
+        {
+          'weight': valueDropdown.value,
+          'price': double.parse(priceController.text)
+        },
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+      print('Cylinder saved.');
+      _loadCylinders();
+      await _database.close();
+    } catch (e) {
+      print('Error saving cilynder: $e');
+      Get.showSnackbar(const GetSnackBar(
+        message: 'Ocurrio un error al guardar el cilindro',
+        duration: Duration(seconds: 4),
+      ));
+    }
+  }
+
+/*   addCylinder() async {
+    if (quantityController.text.isEmpty || priceController.text.isEmpty) {
+      Get.showSnackbar(const GetSnackBar(
+        message: 'Cantidad y precio son obligatorios',
+        duration: Duration(seconds: 4),
+      ));
+      return;
+    }
+    quantity = int.parse(quantityController.text);
+    for (int i = 0; i < quantity!; i++) {
+      await saveData();
+    }
   }
 
   Future<void> saveData() async {
@@ -45,6 +114,7 @@ class HomeController extends GetxController {
         return db.execute(
           'CREATE TABLE cylinders(id INTEGER PRIMARY KEY, weight INTEGER, price DOUBLE)',
         );
+        
       },
       version: 1,
     );
@@ -68,7 +138,7 @@ class HomeController extends GetxController {
         duration: Duration(seconds: 4),
       ));
     }
-  }
+  } */
 
   Future<List<Map<String, dynamic>>> getCylinders() async {
     Database database = await openDatabase(
@@ -100,14 +170,13 @@ class HomeController extends GetxController {
             whereArgs: [id],
             conflictAlgorithm: ConflictAlgorithm.replace);
       }
+      _loadCylinders();
       await database.close();
 
       Get.showSnackbar(const GetSnackBar(
         message: 'Cilindro actualizado',
         duration: Duration(seconds: 4),
       ));
-
-      goToHome();
     } catch (e) {
       print('Error editar cilynder: $e');
       Get.showSnackbar(const GetSnackBar(
@@ -126,7 +195,7 @@ class HomeController extends GetxController {
       await database.delete('cylinders', where: 'id=?', whereArgs: [id]);
       print('Cilinder deleted');
       await database.close();
-      goToHome();
+      _loadCylinders();
     } catch (e) {
       print('error al eliminar: $e');
       Get.showSnackbar(const GetSnackBar(
