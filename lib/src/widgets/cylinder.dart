@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:state_play/src/pages/edit_create_cylinder/edit_cylinder.dart';
 import 'package:state_play/src/pages/home/home_controller.dart';
 import 'package:state_play/src/pages/sold/sold_controller.dart';
+import 'package:state_play/src/widgets/space_height_form.dart';
 
 class CylinderWidget extends StatelessWidget {
   CylinderWidget({super.key});
@@ -48,8 +49,13 @@ class CylinderWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         IconButton(
-            onPressed: () async =>
-                Get.dialog(await formSold(context, cylinder['weight'])),
+            onPressed: () async => showModalBottomSheet(
+                  context: context,
+                  backgroundColor: Colors.transparent,
+                  isDismissible: true,
+                  builder: (BuildContext context) =>
+                      formSold(context, cylinder['weight']),
+                ),
             icon: const Icon(
               Icons.check_circle,
               color: Color(0XFF00C535),
@@ -92,10 +98,10 @@ class CylinderWidget extends StatelessWidget {
                           context,
                           cylinder['id'],
                           'Eliminar',
-                          '¿Estas seguro de eliminar este cilindro?',
-                          () { _controller.deleteCilynder(cylinder['id']);
-                          Get.back();
-                          }),
+                          '¿Estas seguro de eliminar este cilindro?', () {
+                        _controller.deleteCilynder(cylinder['id']);
+                        Get.back();
+                      }),
                       icon: const Icon(
                         Icons.delete_forever,
                         color: Colors.white,
@@ -221,36 +227,93 @@ class CylinderWidget extends StatelessWidget {
                 ),
               )));
 
-  Future<AlertDialog> formSold(BuildContext context, cylinderWeight) async {
-    return AlertDialog(
-      title: const Text('Completa el formulario de venta'),
-      content: Column(
+  Widget formSold(BuildContext context, cylinderWeight) {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.5,
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          const SpaceHeightForm(),
+          const SpaceHeightForm(),
+          Text('Completa el formulario de venta',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: MediaQuery.of(context).size.width * 0.043,
+                  fontFamily: 'Averta',
+                  fontWeight: FontWeight.w300)),
+          const SpaceHeightForm(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.08,
+              ),
+              Text('¿A quien vendio el cilindro?',
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.width * 0.038,
+                      fontFamily: 'Averta',
+                      fontWeight: FontWeight.w500)),
+            ],
+          ),
+          const Padding(padding: EdgeInsets.only(bottom: 5)),
           TextField(
             controller: _soldController.nameController,
             decoration: InputDecoration(
                 hintText: 'Nombre del cilindro',
+                hintStyle: const TextStyle(fontFamily: 'Averta', fontWeight: FontWeight.w300),
                 constraints: BoxConstraints(
                     maxHeight: MediaQuery.of(context).size.height * 0.05,
                     maxWidth: MediaQuery.of(context).size.width * 0.75)),
           ),
+          const SpaceHeightForm(),
+          const SpaceHeightForm(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.08,
+              ),
+            Text('¿Cuanto vendio el cilindro?',
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.width * 0.038,
+                      fontFamily: 'Averta',
+                      fontWeight: FontWeight.w500)),
+            ],
+          ),
+          const Padding(padding: EdgeInsets.only(bottom: 5)),
           TextField(
             controller: _soldController.priceController,
             decoration: InputDecoration(
                 hintText: 'Precio: \$ 80.0000',
+                hintStyle: const TextStyle(fontFamily: 'Averta', fontWeight: FontWeight.w300),
                 constraints: BoxConstraints(
                     maxHeight: MediaQuery.of(context).size.height * 0.05,
                     maxWidth: MediaQuery.of(context).size.width * 0.75)),
           ),
+          const SpaceHeightForm(),
+          const SpaceHeightForm(),
+          TextButton(
+              onPressed: () {
+                _soldController.soldCylinder(cylinderWeight);
+              },
+              child: Text(
+                'Confirmar venta',
+                style: TextStyle(
+                    fontSize: MediaQuery.of(context).size.width * 0.043,
+                    fontFamily: 'Averta',
+                    fontWeight: FontWeight.bold),
+              ))
         ],
       ),
-      actions: [
-        TextButton(
-            onPressed: () {
-              _soldController.soldCylinder(cylinderWeight);
-            },
-            child: const Text('Confirmar Venta'))
-      ],
     );
   }
 }

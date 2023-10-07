@@ -3,8 +3,6 @@ import 'package:get/get.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
-import '../../global/global_var.dart';
-
 class HomeController extends GetxController {
   TextEditingController priceController = TextEditingController();
   TextEditingController quantityController = TextEditingController();
@@ -92,53 +90,6 @@ class HomeController extends GetxController {
       ));
     }
   }
-
-/*   addCylinder() async {
-    if (quantityController.text.isEmpty || priceController.text.isEmpty) {
-      Get.showSnackbar(const GetSnackBar(
-        message: 'Cantidad y precio son obligatorios',
-        duration: Duration(seconds: 4),
-      ));
-      return;
-    }
-    quantity = int.parse(quantityController.text);
-    for (int i = 0; i < quantity!; i++) {
-      await saveData();
-    }
-  }
-
-  Future<void> saveData() async {
-    Database database = await openDatabase(
-      join(await getDatabasesPath(), 'my_database.db'),
-      onCreate: (db, version) {
-        return db.execute(
-          'CREATE TABLE cylinders(id INTEGER PRIMARY KEY, weight INTEGER, price DOUBLE)',
-        );
-        
-      },
-      version: 1,
-    );
-
-    try {
-      await database.insert(
-        'cylinders',
-        {
-          'weight': valueDropdown.value,
-          'price': double.parse(priceController.text)
-        },
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
-      print('Cylinder saved.');
-      await database.close();
-      Get.offAllNamed('/home_page');
-    } catch (e) {
-      print('Error saving cilynder: $e');
-      Get.showSnackbar(const GetSnackBar(
-        message: 'Ocurrio un error al guardar el cilindro',
-        duration: Duration(seconds: 4),
-      ));
-    }
-  } */
 
   Future<List<Map<String, dynamic>>> getCylinders() async {
     Database database = await openDatabase(
