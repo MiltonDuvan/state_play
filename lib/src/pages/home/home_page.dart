@@ -15,7 +15,9 @@ class HomePage extends StatelessWidget {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
-        title: const Text('Cilindros '),
+        backgroundColor:Colors.white,
+        title: const Text('Cilindros ', style: TextStyle(color: Colors.black),),
+        leading:  IconButton(onPressed:() => _controller.goToCylinderHistory(), icon: Icon(Icons.history_rounded, size: MediaQuery.of(context).size.width * 0.08,color: Colors.black,)),
       ),
       body: SingleChildScrollView(
         child: Column(

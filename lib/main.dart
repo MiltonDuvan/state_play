@@ -33,7 +33,7 @@ class _MyAppState extends State<MyApp> {
       initialRoute: '/home_page',
       getPages: [GetPage(name: '/home_page', page: () => HomePage()),
       GetPage(name: '/add_cylinder', page: () => CreateCylinder()),
-      GetPage(name: '/sold', page: () => const SoldPage()),
+      GetPage(name: '/history_cylinder', page: () =>  SoldPage()),
       ],
       theme: ThemeData(
         fontFamily: 'Averta',

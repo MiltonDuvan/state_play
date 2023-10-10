@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/route_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:state_play/src/pages/edit_create_cylinder/edit_cylinder.dart';
 import 'package:state_play/src/pages/home/home_controller.dart';

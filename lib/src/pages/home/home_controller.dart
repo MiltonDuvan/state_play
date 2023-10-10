@@ -92,10 +92,7 @@ class HomeController extends GetxController {
   }
 
   Future<List<Map<String, dynamic>>> getCylinders() async {
-    Database database = await openDatabase(
-      join(await getDatabasesPath(), 'my_database.db'),
-      version: 1,
-    );
+   Database database = await openDatabase('my_database.db');
     List<Map<String, dynamic>> cylinders = await database.query('cylinders');
     await database.close();
     return cylinders;
@@ -163,4 +160,6 @@ class HomeController extends GetxController {
   void goToAddCylinder() {
     Get.toNamed('/add_cylinder');
   }
+
+  void goToCylinderHistory()=> Get.toNamed('/history_cylinder');
 }
