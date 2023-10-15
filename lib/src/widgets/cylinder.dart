@@ -53,7 +53,7 @@ class CylinderWidget extends StatelessWidget {
                   backgroundColor: Colors.transparent,
                   isDismissible: true,
                   builder: (BuildContext context) =>
-                      formSold(context, cylinder['weight']),
+                      formSold(context,cylinder['id'], cylinder['weight'], cylinder['price']),
                 ),
             icon: const Icon(
               Icons.check_circle,
@@ -226,7 +226,7 @@ class CylinderWidget extends StatelessWidget {
                 ),
               )));
 
-  Widget formSold(BuildContext context, cylinderWeight) {
+  Widget formSold(BuildContext context,idOriginalCylinder, cylinderWeight, priceOld) {
     return Container(
       height: MediaQuery.of(context).size.height * 0.5,
       decoration: const BoxDecoration(
@@ -302,7 +302,7 @@ class CylinderWidget extends StatelessWidget {
           const SpaceHeightForm(),
           TextButton(
               onPressed: () {
-                _soldController.soldCylinder(cylinderWeight);
+                _soldController.soldCylinder(idOriginalCylinder, cylinderWeight, priceOld);
               },
               child: Text(
                 'Confirmar venta',

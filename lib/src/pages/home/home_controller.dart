@@ -25,10 +25,10 @@ class HomeController extends GetxController {
   void onInit() async {
     super.onInit();
     initializeDatabase();
-    _loadCylinders();
+    loadCylinders();
   }
 
-  void _loadCylinders() async {
+  void loadCylinders() async {
     final loadedCylinders = await getCylinders();
     cylinders.assignAll(loadedCylinders);
     loading.value = false;
@@ -45,7 +45,7 @@ class HomeController extends GetxController {
           'CREATE TABLE cylinders(id INTEGER PRIMARY KEY, weight INTEGER, price DOUBLE)',
         );
         db.execute(
-          'CREATE TABLE solds(id INTEGER PRIMARY KEY, weight INTEGER, name TEXT)',
+          'CREATE TABLE solds(id INTEGER PRIMARY KEY, name TEXT, weight INTEGER, price_old DOUBLE, price_new DOUBLE, date_time TEXT)',
         );
       },
       version: 1,
@@ -66,6 +66,7 @@ class HomeController extends GetxController {
     for (int i = 0; i < quantity!; i++) {
       await saveData(_database);
     }
+    resetTextController();
   }
 
   Future<void> saveData(Database database) async {
@@ -80,7 +81,7 @@ class HomeController extends GetxController {
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
       print('Cylinder saved.');
-      _loadCylinders();
+      loadCylinders();
       await _database.close();
     } catch (e) {
       print('Error saving cilynder: $e');
@@ -92,7 +93,7 @@ class HomeController extends GetxController {
   }
 
   Future<List<Map<String, dynamic>>> getCylinders() async {
-   Database database = await openDatabase('my_database.db');
+    Database database = await openDatabase('my_database.db');
     List<Map<String, dynamic>> cylinders = await database.query('cylinders');
     await database.close();
     return cylinders;
@@ -118,9 +119,9 @@ class HomeController extends GetxController {
             whereArgs: [id],
             conflictAlgorithm: ConflictAlgorithm.replace);
       }
-      _loadCylinders();
+      resetTextController();
+      loadCylinders();
       await database.close();
-
       Get.showSnackbar(const GetSnackBar(
         message: 'Cilindro actualizado',
         duration: Duration(seconds: 4),
@@ -143,7 +144,7 @@ class HomeController extends GetxController {
       await database.delete('cylinders', where: 'id=?', whereArgs: [id]);
       print('Cilinder deleted');
       await database.close();
-      _loadCylinders();
+      loadCylinders();
     } catch (e) {
       print('error al eliminar: $e');
       Get.showSnackbar(const GetSnackBar(
@@ -151,6 +152,11 @@ class HomeController extends GetxController {
         duration: Duration(seconds: 4),
       ));
     }
+  }
+
+  void resetTextController() {
+    priceController.text = '';
+    quantityController.text = '';
   }
 
   void goToHome() {
@@ -161,5 +167,5 @@ class HomeController extends GetxController {
     Get.toNamed('/add_cylinder');
   }
 
-  void goToCylinderHistory()=> Get.toNamed('/history_cylinder');
+  void goToCylinderHistory() => Get.toNamed('/history_cylinder');
 }
