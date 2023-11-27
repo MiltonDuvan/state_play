@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:state_play/src/pages/detail_cylinder/detail_cylinder.dart';
 import 'package:state_play/src/pages/edit_create_cylinder/create_cylinder.dart';
 import 'package:state_play/src/pages/home/home_page.dart';
 import 'package:state_play/src/pages/sold/sold_page.dart';

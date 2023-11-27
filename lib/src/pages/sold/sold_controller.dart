@@ -103,4 +103,8 @@ class SoldController extends GetxController {
   void goToSold() {
     Get.toNamed('/history_cylinder');
   }
+
+  void goToDetailCylinder() {
+    Get.toNamed('/detail_cylinder');
+  }
 }

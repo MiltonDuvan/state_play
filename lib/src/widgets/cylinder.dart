@@ -6,6 +6,8 @@ import 'package:state_play/src/pages/home/home_controller.dart';
 import 'package:state_play/src/pages/sold/sold_controller.dart';
 import 'package:state_play/src/widgets/space_height_form.dart';
 
+import '../global/global_var.dart';
+
 class CylinderWidget extends StatelessWidget {
   CylinderWidget({super.key});
   final HomeController _controller = Get.find<HomeController>();
@@ -40,7 +42,6 @@ class CylinderWidget extends StatelessWidget {
 
   Widget listCylinders(
       BuildContext context, Map<String, dynamic> cylinder, int index) {
-    NumberFormat numberFormat = NumberFormat('#,###');
     String priceFormat = numberFormat.format(cylinder['price']);
     int cilynderNumber = index + 1;
     return Column(
@@ -52,8 +53,8 @@ class CylinderWidget extends StatelessWidget {
                   context: context,
                   backgroundColor: Colors.transparent,
                   isDismissible: true,
-                  builder: (BuildContext context) =>
-                      formSold(context,cylinder['id'], cylinder['weight'], cylinder['price']),
+                  builder: (BuildContext context) => formSold(context,
+                      cylinder['id'], cylinder['weight'], cylinder['price']),
                 ),
             icon: const Icon(
               Icons.check_circle,
@@ -226,7 +227,8 @@ class CylinderWidget extends StatelessWidget {
                 ),
               )));
 
-  Widget formSold(BuildContext context,idOriginalCylinder, cylinderWeight, priceOld) {
+  Widget formSold(
+      BuildContext context, idOriginalCylinder, cylinderWeight, priceOld) {
     return Container(
       height: MediaQuery.of(context).size.height * 0.5,
       decoration: const BoxDecoration(
@@ -267,7 +269,8 @@ class CylinderWidget extends StatelessWidget {
             controller: _soldController.nameController,
             decoration: InputDecoration(
                 hintText: 'Nombre del cilindro',
-                hintStyle: const TextStyle(fontFamily: 'Averta', fontWeight: FontWeight.w300),
+                hintStyle: const TextStyle(
+                    fontFamily: 'Averta', fontWeight: FontWeight.w300),
                 constraints: BoxConstraints(
                     maxHeight: MediaQuery.of(context).size.height * 0.05,
                     maxWidth: MediaQuery.of(context).size.width * 0.75)),
@@ -280,7 +283,7 @@ class CylinderWidget extends StatelessWidget {
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.08,
               ),
-            Text('¿Cuanto vendio el cilindro?',
+              Text('¿Cuanto vendio el cilindro?',
                   textAlign: TextAlign.start,
                   style: TextStyle(
                       fontSize: MediaQuery.of(context).size.width * 0.038,
@@ -293,7 +296,8 @@ class CylinderWidget extends StatelessWidget {
             controller: _soldController.priceController,
             decoration: InputDecoration(
                 hintText: 'Precio: \$ 80.0000',
-                hintStyle: const TextStyle(fontFamily: 'Averta', fontWeight: FontWeight.w300),
+                hintStyle: const TextStyle(
+                    fontFamily: 'Averta', fontWeight: FontWeight.w300),
                 constraints: BoxConstraints(
                     maxHeight: MediaQuery.of(context).size.height * 0.05,
                     maxWidth: MediaQuery.of(context).size.width * 0.75)),
@@ -302,7 +306,8 @@ class CylinderWidget extends StatelessWidget {
           const SpaceHeightForm(),
           TextButton(
               onPressed: () {
-                _soldController.soldCylinder(idOriginalCylinder, cylinderWeight, priceOld);
+                _soldController.soldCylinder(
+                    idOriginalCylinder, cylinderWeight, priceOld);
               },
               child: Text(
                 'Confirmar venta',
