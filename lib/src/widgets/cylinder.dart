@@ -124,8 +124,8 @@ class CylinderWidget extends StatelessWidget {
                 builder: (BuildContext context) {
                   return EditCylinder(
                       editCreate: () {
+                        Get.back();
                         _controller.editCylinder(cylinder['id']);
-                        _controller.goToHome();
                       },
                       cylinderId: cylinder['id'],
                       cylinderWeight: cylinder['weight'],

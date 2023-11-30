@@ -95,16 +95,12 @@ class HomeController extends GetxController {
   Future<List<Map<String, dynamic>>> getCylinders() async {
     Database database = await openDatabase('my_database.db');
     List<Map<String, dynamic>> cylinders = await database.query('cylinders');
-    await database.close();
     return cylinders;
   }
 
   Future<void> editCylinder(int id) async {
+    Database database = await openDatabase('my_database.db');
     try {
-      Database database = await openDatabase(
-          join(await getDatabasesPath(), 'my_database.db'),
-          version: 1);
-
       final Map<String, dynamic> updatedValues = {};
 
       updatedValues['weight'] = editWeight.value;
@@ -121,7 +117,7 @@ class HomeController extends GetxController {
       }
       resetTextController();
       loadCylinders();
-      await database.close();
+      Get.back();
       Get.showSnackbar(const GetSnackBar(
         message: 'Cilindro actualizado',
         duration: Duration(seconds: 4),
@@ -132,6 +128,8 @@ class HomeController extends GetxController {
         message: 'Ocurrio un error al editar el cilindro',
         duration: Duration(seconds: 4),
       ));
+    } finally {
+      await database.close();
     }
   }
 
@@ -143,7 +141,6 @@ class HomeController extends GetxController {
     try {
       await database.delete('cylinders', where: 'id=?', whereArgs: [id]);
       print('Cilinder deleted');
-      await database.close();
       loadCylinders();
     } catch (e) {
       print('error al eliminar: $e');
@@ -151,6 +148,8 @@ class HomeController extends GetxController {
         message: 'Error al eliminar',
         duration: Duration(seconds: 4),
       ));
+    } finally {
+      await database.close();
     }
   }
 
